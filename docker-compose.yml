@@ -1,0 +1,47 @@
+version: "2"
+services:
+    web:
+        image: nginx:alpine
+        ports:
+            - "80:80"
+            - "443:443"
+        links:
+            - php
+        volumes:
+            - ./wwwroot:/wwwroot
+            - ./nginx/conf.d:/etc/nginx/conf.d:ro
+    php:
+        image: shion/php-fpm
+        expose:
+            - "9000"
+        links:
+            - mysql
+            - memcached
+            - redis
+        volumes:
+            - ./wwwroot:/wwwroot
+            - ./php/php.ini:/usr/local/etc/php/php.ini:ro
+    mysql:
+        image: mariadb:10.1
+        ports:
+            - "3306"
+        expose:
+            - "3306"
+        environment:
+            - MYSQL_ROOT_PASSWORD=123456
+        volumes:
+            - mysqldata:/var/lib/mysql
+    memcached:
+        image: memcached:alpine
+        ports:
+            - "11211"
+        expose:
+            - "11211"
+    redis:
+        image: redis:alpine
+        ports:
+            - "6379"
+        expose:
+            - "6379"
+volumes:
+    mysqldata:
