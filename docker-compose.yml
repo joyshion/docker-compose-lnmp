@@ -10,6 +10,9 @@ services:
         volumes:
             - ./wwwroot:/wwwroot
             - ./nginx/conf.d:/etc/nginx/conf.d:ro
+        networks:
+            lnmp_net:
+                ipv4_address: 172.10.0.10
     php:
         image: shion/php-fpm
         expose:
@@ -21,8 +24,11 @@ services:
         volumes:
             - ./wwwroot:/wwwroot
             - ./php/php.ini:/usr/local/etc/php/php.ini:ro
+        networks:
+            lnmp_net:
+                ipv4_address: 172.10.0.11
     mysql:
-        image: mariadb:10.1
+        image: mariadb
         ports:
             - "3306"
         expose:
@@ -31,17 +37,35 @@ services:
             - MYSQL_ROOT_PASSWORD=123456
         volumes:
             - mysqldata:/var/lib/mysql
+            - ./mysql/backup:/backup/mysql
+            - ./mysql/conf/mariadb.cnf:/etc/mysql/conf.d/mariadb.cnf:ro
+        networks:
+            lnmp_net:
+                ipv4_address: 172.10.0.12
     memcached:
         image: memcached:alpine
         ports:
             - "11211"
         expose:
             - "11211"
+        networks:
+            lnmp_net:
+                ipv4_address: 172.10.0.13
     redis:
         image: redis:alpine
         ports:
             - "6379"
         expose:
             - "6379"
+        networks:
+            lnmp_net:
+                ipv4_address: 172.10.0.14
 volumes:
     mysqldata:
+
+networks:
+    lnmp_net:
+        ipam:
+            driver: default
+            config:
+                - subnet: "172.10.0.0/24"
