@@ -14,7 +14,7 @@ services:
             lnmp_net:
                 ipv4_address: 172.10.0.10
     php:
-        image: shion/php-fpm
+        image: shion/php-fpm:7.3
         expose:
             - "9000"
         links:
@@ -28,17 +28,15 @@ services:
             lnmp_net:
                 ipv4_address: 172.10.0.11
     mysql:
-        image: mariadb
+        image: mysql:8.0
         ports:
-            - "3306"
+            - "3306:3306"
         expose:
             - "3306"
         environment:
             - MYSQL_ROOT_PASSWORD=123456
         volumes:
             - mysqldata:/var/lib/mysql
-            - ./mysql/backup:/backup/mysql
-            - ./mysql/conf/mariadb.cnf:/etc/mysql/conf.d/mariadb.cnf:ro
         networks:
             lnmp_net:
                 ipv4_address: 172.10.0.12
