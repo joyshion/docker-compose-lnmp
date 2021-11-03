@@ -1,6 +1,6 @@
 version: "2"
 services:
-    web:
+    nginx:
         image: nginx:alpine
         ports:
             - "80:80"
