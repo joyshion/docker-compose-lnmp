@@ -8,11 +8,8 @@ services:
         links:
             - php
         volumes:
-            - ./wwwroot:/wwwroot
-            - ./nginx/conf.d:/etc/nginx/conf.d:ro
-        networks:
-            lnmp_net:
-                ipv4_address: 172.10.0.10
+            - /lnmp/wwwroot:/wwwroot
+            - /lnmp/nginx/conf.d:/etc/nginx/conf.d:ro
     php:
         image: shion/php-fpm:7.3
         expose:
@@ -22,11 +19,8 @@ services:
             - memcached
             - redis
         volumes:
-            - ./wwwroot:/wwwroot
-            - ./php/php.ini:/usr/local/etc/php/php.ini:ro
-        networks:
-            lnmp_net:
-                ipv4_address: 172.10.0.11
+            - /lnmp/wwwroot:/wwwroot
+            - /lnmp/php/php.ini:/usr/local/etc/php/php.ini:ro
     mysql:
         image: mysql:8.0
         ports:
@@ -37,33 +31,17 @@ services:
             - MYSQL_ROOT_PASSWORD=123456
         volumes:
             - mysqldata:/var/lib/mysql
-        networks:
-            lnmp_net:
-                ipv4_address: 172.10.0.12
     memcached:
         image: memcached:alpine
         ports:
-            - "11211"
+            - "11211:11211"
         expose:
             - "11211"
-        networks:
-            lnmp_net:
-                ipv4_address: 172.10.0.13
     redis:
         image: redis:alpine
         ports:
-            - "6379"
+            - "6379:6379"
         expose:
             - "6379"
-        networks:
-            lnmp_net:
-                ipv4_address: 172.10.0.14
 volumes:
     mysqldata:
-
-networks:
-    lnmp_net:
-        ipam:
-            driver: default
-            config:
-                - subnet: "172.10.0.0/24"
