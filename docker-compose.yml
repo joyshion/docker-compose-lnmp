@@ -19,7 +19,6 @@ services:
             - "9000"
         links:
             - mysql
-            - memcached
             - redis
         volumes:
             - ./wwwroot:/wwwroot
@@ -36,23 +35,15 @@ services:
         environment:
             - MYSQL_ROOT_PASSWORD=123456
         volumes:
+            - ./mysql/conf.d:/etc/mysql/conf.d:ro
             - mysqldata:/var/lib/mysql
         networks:
             lnmp_net:
                 ipv4_address: 172.10.0.12
-    memcached:
-        image: memcached:alpine
-        ports:
-            - "11211"
-        expose:
-            - "11211"
-        networks:
-            lnmp_net:
-                ipv4_address: 172.10.0.13
     redis:
         image: redis:alpine
         ports:
-            - "6379"
+            - "6379:6379"
         expose:
             - "6379"
         networks:
