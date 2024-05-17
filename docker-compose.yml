@@ -1,11 +1,10 @@
-version: "2"
 services:
     nginx:
         image: nginx:alpine
         ports:
             - "80:80"
             - "443:443"
-        links:
+        depends_on:
             - php
         volumes:
             - ./wwwroot:/wwwroot
@@ -17,7 +16,7 @@ services:
         image: shion/php-fpm:7.3
         expose:
             - "9000"
-        links:
+        depends_on:
             - mysql
             - redis
         volumes:
@@ -36,6 +35,7 @@ services:
             - MYSQL_ROOT_PASSWORD=123456
         volumes:
             - ./mysql/conf.d:/etc/mysql/conf.d:ro
+            - ./mysql/backup:/var/lib/mysql_backup
             - mysqldata:/var/lib/mysql
         networks:
             lnmp_net:
