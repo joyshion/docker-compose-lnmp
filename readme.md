@@ -4,7 +4,6 @@ LNMP based on the docker container.
 
 ### Include
 - nginx
-- mariaDB
-- php-fpm
-- memcached
+- mysql 8.0
+- php-fpm 7.3
 - redis
